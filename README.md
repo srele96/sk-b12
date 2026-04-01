@@ -21,7 +21,7 @@ _Note: Here i did a similar thing a while ago <https://github.com/srele96/sk-exp
 
 Use the echo server for testing purposes:
 
-```
+```env
 https://echo.free.beeceptor.com
 ```
 
