@@ -2,12 +2,18 @@
 
 Send a CV via pipeline.
 
+## Thank you
+
+This project was cool, i loved it! This was one of the most interesting applications i have sent. Actually, this was probably the most interesting application i had to send. Imagine writing code to actually submit a cv. Haven't seen this one in other job postings so far. Props to the people responsible for the idea. Hope you have a good time finding the right candidate.
+
 ## High level explanation
 
 - The script sends an application
 - The workflow uses custom image to clone the repo and run the script. The workflow variables encapsulate secrets and inject them into the ENVIRONMENT.
 - The custom image acts as an empty shell with prepared tools required to build the project
 - The automated script to build and publish a docker image to github
+- The workflow to build and publish custom docker image
+- The workflow to submit an application
 
 _Note: Here i did a similar thing a while ago <https://github.com/srele96/sk-experiments/tree/develop/docker/experiments/play_with_docker>._
 
