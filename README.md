@@ -61,7 +61,7 @@ uv sync
 
 Open venv in current shell:
 
-```
+```bash
 source env/bin/activate
 ```
 
