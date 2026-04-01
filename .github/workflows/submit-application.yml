@@ -38,13 +38,18 @@ jobs:
       - name: Cache UV
         uses: actions/cache@v5
         with:
-          path: /root/.cache/uv
+          path: .uv-cache
           key: ${{ runner.os }}-uv-${{ hashFiles('**/uv.lock') }}
           restore-keys: |
             ${{ runner.os }}-uv-
 
       - name: Run Sumission Script
         env:
+          # The docker container does not see the /root on the host machine and
+          # we can't store cache there. That was my previous attempt at caching
+          # dependencies.
+          UV_CACHE_DIR: .uv-cache
+
           DATA_URL: ${{ github.event.inputs.url }}
           DATA_NAME: ${{ github.event.inputs.name }}
           DATA_EMAIL: ${{ github.event.inputs.email }}
