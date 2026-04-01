@@ -121,7 +121,8 @@ def submitApplication():
     response = requests.post(
         DATA_URL,
         data=jsonData, headers={
-            'X-Signature-256': f'sha256={digest}'
+            'X-Signature-256': f'sha256={digest}',
+            'Content-Type': 'application/json'
         }
     )
     if response.ok:
