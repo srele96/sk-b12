@@ -43,6 +43,8 @@ jobs:
           DATA_RESUME_LINK: ${{ github.event.inputs.resume_link }}
           SUBMIT_APPLICATION: ${{ github.event.inputs.submit_application }}
 
+          DEBUG: ${{ github.event.inputs.debug }}
+
           DATA_REPOSITORY_LINK: "https://github.com/${{ github.repository }}"
           DATA_ACTION_RUN_LINK: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
