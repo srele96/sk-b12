@@ -25,6 +25,7 @@ KEY_DATA_SHA_HMAC_SECRET = 'DATA_SHA_HMAC_SECRET'
 KEY_GITHUB_RUN_ID = 'GITHUB_RUN_ID'
 
 KEY_SUBMIT_APPLICATION = 'SUBMIT_APPLICATION'
+KEY_DEBUG = 'DEBUG'
 
 VARS = [
     KEY_DATA_URL,
@@ -35,7 +36,8 @@ VARS = [
     KEY_DATA_ACTION_RUN_LINK,
     KEY_GITHUB_RUN_ID,
     KEY_DATA_SHA_HMAC_SECRET,
-    KEY_SUBMIT_APPLICATION
+    KEY_SUBMIT_APPLICATION,
+    KEY_DEBUG
 ]
 
 
@@ -79,12 +81,42 @@ def strToBool(value: str):
 # The issue with dotenv is that every value is treated as a string
 SUBMIT_APPLICATION = strToBool(os.getenv(KEY_SUBMIT_APPLICATION))
 
+DEBUG = strToBool(os.getenv(KEY_DEBUG))
+
 # ENVIRONMENT VARIABLES =======================================================
 # =============================================================================
 
 
 # =============================================================================
 # IMPLEMENTATION ==============================================================
+
+
+class SimpleLogger:
+    @staticmethod
+    def logError(value: str):
+        printf(f"**** SK-B12 ERROR **** {value}")
+
+    @staticmethod
+    def logMessage(value: str):
+        print(f"**** SK-B12 MESSAGE **** {value}")
+
+    @staticmethod
+    def logDebug(value: str):
+        if DEBUG:
+            print(f"**** SK-B12 DEBUG **** {value}")
+
+    @staticmethod
+    def logStr(value: str):
+        return f"-- {value} -- "
+
+    @staticmethod
+    def calledFrom(value: str):
+        return f"({value}): "
+
+    @staticmethod
+    def jsonDumps(data: dict):
+        return json.dumps(data, separators=(',', ':'), sort_keys=True)
+
 
 def getConsistentData(data):
     # Ensure consistent SHA digest
@@ -112,11 +144,30 @@ def assertExpectedDigest():
         'action_run_link': "https://link-to-github-or-another-forge.example.com/your/repository/actions/runs/run_id"  # noqa: 501
     }
 
+    fnName = "assertExpectedDigest"
+    SimpleLogger.logDebug(
+        f"{SimpleLogger.calledFrom(fnName)} "
+        f"{SimpleLogger.logStr("data")} "
+        f"{SimpleLogger.jsonDumps(data)}"
+    )
+
     # Expected digest to confirm correctness of the code
     # https://job-boards.greenhouse.io/b12/jobs/7544356
     expectedDigest = 'c5db257a56e3c258ec1162459c9a295280871269f4cf70146d2c9f1b52671d45'  # noqa: 501
 
+    SimpleLogger.logDebug(
+        f"{fnName} "
+        f"{SimpleLogger.logStr("expectedDigest")} "
+        f"{expectedDigest}"
+    )
+
     digest = computeDigest(data)
+
+    SimpleLogger.logDebug(
+        f"{fnName} "
+        f"{SimpleLogger.logStr("digest")} "
+        f"{digest}"
+    )
 
     assert digest == expectedDigest, (
         f"Unexpected signature. Received: {digest}."
@@ -141,6 +192,13 @@ def submitApplication():
         'action_run_link': GITHUB_RUN_ID
     }
 
+    fnName = "submitApplication"
+    SimpleLogger.logDebug(
+        f"{SimpleLogger.calledFrom(fnName)} "
+        f"{SimpleLogger.logStr("data")} "
+        f"{SimpleLogger.jsonDumps(data)}"
+    )
+
     jsonData = getConsistentData(data)
 
     digest = computeDigest(data)
@@ -153,9 +211,18 @@ def submitApplication():
             'Content-Type': 'application/json'
         }
     )
-    if response.ok:
-        print("ok", response.json())
+    if response.ok or response.status_code == 200:
+        SimpleLogger.logMessage(
+            f"{SimpleLogger.calledFrom(fnName)}"
+            f"{SimpleLogger.logStr("SUCCESS")}"
+            f"{response.json()}"
+        )
     else:
+        SimpleLogger().logError(
+            f"{SimplerLogger.calledFrom(fnName)}"
+            f"{SimpleLogger.logStr("Request failed with status code")}"
+            f"{response.status_code}"
+        )
         print("Error", response.status_code)
 
 # IMPLEMENTATION ==============================================================

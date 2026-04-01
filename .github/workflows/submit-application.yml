@@ -15,18 +15,15 @@ on:
       resume_link:
         description: "Your resume link"
         required: true
-      repository_link:
-        description: "Your repository link"
-        required: true
-      action_run_link:
-        description: "The link to the page that runs github action"
-        required: true
-      sha_hmac_secret:
-        description: "The content signing secret"
-        required: true
       submit_application:
         description: "A flag to manually control whether pipeline submits the application or not"
         required: true
+        type: boolean
+        default: false
+      debug:
+        description: "A flag to turn on debug logging in the script"
+        required: true
+        type: boolean
         default: false
 
 jobs:
@@ -35,10 +32,22 @@ jobs:
     container:
       image: ghcr.io/srele96/sk-b12-env:latest
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Run script
+      - name: Run Sumission Script
+        env:
+          DATA_URL: ${{ github.event.inputs.url }}
+          DATA_NAME: ${{ github.event.inputs.name }}
+          DATA_EMAIL: ${{ github.event.inputs.email }}
+          DATA_RESUME_LINK: ${{ github.event.inputs.resume_link }}
+          SUBMIT_APPLICATION: ${{ github.event.inputs.submit_application }}
+
+          DATA_REPOSITORY_LINK: "https://github.com/${{ github.repository }}"
+          DATA_ACTION_RUN_LINK: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          # Avoid storing secret in plain text
+          DATA_SHA_HMAC_SECRET: ${{ secrets.DATA_SHA_HMAC_SECRET }}
         run: |
           uv sync
           uv run main.py
