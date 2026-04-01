@@ -33,7 +33,7 @@ jobs:
       image: ghcr.io/srele96/sk-b12-env:latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Run Sumission Script
         env:
