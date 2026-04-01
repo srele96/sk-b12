@@ -156,7 +156,7 @@ def assertExpectedDigest():
     expectedDigest = 'c5db257a56e3c258ec1162459c9a295280871269f4cf70146d2c9f1b52671d45'  # noqa: 501
 
     SimpleLogger.logDebug(
-        f"{fnName} "
+        f"{SimpleLogger.calledFrom(fnName)} "
         f"{SimpleLogger.logStr("expectedDigest")} "
         f"{expectedDigest}"
     )
@@ -164,7 +164,7 @@ def assertExpectedDigest():
     digest = computeDigest(data)
 
     SimpleLogger.logDebug(
-        f"{fnName} "
+        f"{SimpleLogger.calledFrom(fnName)} "
         f"{SimpleLogger.logStr("digest")} "
         f"{digest}"
     )
