@@ -19,11 +19,6 @@ KEY_DATA_REPOSITORY_LINK = "DATA_REPOSITORY_LINK"
 KEY_DATA_ACTION_RUN_LINK = "DATA_ACTION_RUN_LINK"
 KEY_DATA_SHA_HMAC_SECRET = 'DATA_SHA_HMAC_SECRET'
 
-# Figure out if i can retrieve correct github run id automatically, or i need
-# to use some API call
-# https://stackoverflow.com/questions/76464269/how-to-rerun-a-github-action-workflow-from-the-command-line-and-have-the-status/76465815#76465815
-KEY_GITHUB_RUN_ID = 'GITHUB_RUN_ID'
-
 KEY_SUBMIT_APPLICATION = 'SUBMIT_APPLICATION'
 KEY_DEBUG = 'DEBUG'
 
@@ -34,7 +29,6 @@ VARS = [
     KEY_DATA_RESUME_LINK,
     KEY_DATA_REPOSITORY_LINK,
     KEY_DATA_ACTION_RUN_LINK,
-    KEY_GITHUB_RUN_ID,
     KEY_DATA_SHA_HMAC_SECRET,
     KEY_SUBMIT_APPLICATION,
     KEY_DEBUG
@@ -62,8 +56,7 @@ DATA_NAME = os.getenv(KEY_DATA_NAME)
 DATA_EMAIL = os.getenv(KEY_DATA_EMAIL)
 DATA_RESUME_LINK = os.getenv(KEY_DATA_RESUME_LINK)
 DATA_REPOSITORY_LINK = os.getenv(KEY_DATA_REPOSITORY_LINK)
-
-GITHUB_RUN_ID = os.getenv(KEY_GITHUB_RUN_ID)
+DATA_ACTION_RUN_LINK = os.getenv(KEY_DATA_ACTION_RUN_LINK)
 
 
 def strToBool(value: str):
@@ -189,7 +182,7 @@ def submitApplication():
         'email': DATA_EMAIL,
         'resume_link': DATA_RESUME_LINK,
         'repository_link': DATA_REPOSITORY_LINK,
-        'action_run_link': GITHUB_RUN_ID
+        'action_run_link': DATA_ACTION_RUN_LINK
     }
 
     fnName = "submitApplication"
