@@ -35,5 +35,10 @@ jobs:
     container:
       image: ghcr.io/srele96/sk-b12-env:latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Run script
-        run: uv sync && uv run main.py
+        run: |
+          uv sync
+          uv run main.py
