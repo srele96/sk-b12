@@ -16,6 +16,9 @@ KEY_DATA_REPOSITORY_LINK = "DATA_REPOSITORY_LINK"
 KEY_DATA_ACTION_RUN_LINK = "DATA_ACTION_RUN_LINK"
 KEY_DATA_SHA_HMAC_SECRET = 'DATA_SHA_HMAC_SECRET'
 
+# Figure out if i can retrieve correct github run id automatically, or i need
+# to use some API call
+# https://stackoverflow.com/questions/76464269/how-to-rerun-a-github-action-workflow-from-the-command-line-and-have-the-status/76465815#76465815
 KEY_GITHUB_RUN_ID = 'GITHUB_RUN_ID'
 
 VARS = [
@@ -113,6 +116,8 @@ def submitApplication():
     jsonData = getConsistentData(data)
 
     digest = computeDigest(data)
+    # TODO: Make submission blockable by default, to debug git workflow ID
+    # retrieval
     response = requests.post(
         DATA_URL,
         data=jsonData, headers={
