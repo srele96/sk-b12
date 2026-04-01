@@ -34,18 +34,38 @@ def ensureVarIsDefined(value=None):
     assert os.getenv(value) is not None, f"Missing required variable: {value}"
 
 
-def ensureAllVarsAreDefined():
-    for var in VARS:
+def ensureAllVarsAreDefined(vars):
+    for var in vars:
         ensureVarIsDefined(var)
 
 
+ensureAllVarsAreDefined(VARS)
+
+# Retrieve injected variables
+
+# Clean up whitespaces to ensure consiste SHA digest
+DATA_SHA_HMAC_SECRET = os.getenv("DATA_SHA_HMAC_SECRET", "").strip()
+
+DATA_URL = os.getenv(KEY_DATA_URL)
+DATA_NAME = os.getenv(KEY_DATA_NAME)
+DATA_EMAIL = os.getenv(KEY_DATA_EMAIL)
+DATA_RESUME_LINK = os.getenv(KEY_DATA_RESUME_LINK)
+DATA_REPOSITORY_LINK = os.getenv(KEY_DATA_REPOSITORY_LINK)
+
+GITHUB_RUN_ID = os.getenv(KEY_GITHUB_RUN_ID)
+
+
+def getConsistentData(data):
+    # Ensure consistent SHA digest
+    return json.dumps(data, separators=(',', ':'), sort_keys=True)
+
+
 def computeDigest(data):
-    jsonData = json.dumps(data)
+    jsonData = getConsistentData(data)
 
     UTF_8 = 'utf-8'
-    secretBytes = os.getenv(KEY_DATA_SHA_HMAC_SECRET).encode(UTF_8)
+    secretBytes = DATA_SHA_HMAC_SECRET.encode(UTF_8)
     messageBytes = jsonData.encode(UTF_8)
-    print(f"jsonData:\n\n{jsonData}\n\n")
     digest = hmac.new(secretBytes, messageBytes, hashlib.sha256).hexdigest()
 
     return digest
@@ -67,7 +87,7 @@ def assertExpectedDigest():
 
     digest = computeDigest(data)
 
-    assert digest is expectedDigest, (
+    assert digest == expectedDigest, (
         f"Unexpected signature. Received: {digest}."
         f" Expected: {expectedDigest}"
     )
@@ -83,18 +103,18 @@ def submitApplication():
     iso_date = today.isoformat()
     data = {
         'timestamp': iso_date,
-        'name': os.getenv(KEY_DATA_NAME),
-        'email': os.getenv(KEY_DATA_EMAIL),
-        'resume_link': os.getenv(KEY_DATA_RESUME_LINK),
-        'repository_link': os.getenv(KEY_DATA_REPOSITORY_LINK),
-        'action_run_link': os.getenv(KEY_GITHUB_RUN_ID)
+        'name': DATA_NAME,
+        'email': DATA_EMAIL,
+        'resume_link': DATA_RESUME_LINK,
+        'repository_link': DATA_REPOSITORY_LINK,
+        'action_run_link': GITHUB_RUN_ID
     }
 
-    jsonData = json.dumps(data)
+    jsonData = getConsistentData(data)
 
     digest = computeDigest(data)
     response = requests.post(
-        os.getenv(KEY_DATA_URL),
+        DATA_URL,
         data=jsonData, headers={
             'X-Signature-256': f'sha256={digest}'
         }
@@ -106,7 +126,6 @@ def submitApplication():
 
 
 def main():
-    ensureAllVarsAreDefined()
     assertExpectedDigest()
     submitApplication()
 
