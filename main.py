@@ -219,7 +219,7 @@ def submitApplication():
         )
     else:
         SimpleLogger.logError(
-            f"{SimplerLogger.calledFrom(fnName)}"
+            f"{SimpleLogger.calledFrom(fnName)}"
             f"{SimpleLogger.logStr("Request failed with status code")}"
             f"{response.status_code}"
         )
