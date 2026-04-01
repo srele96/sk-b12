@@ -218,7 +218,7 @@ def submitApplication():
             f"{response.json()}"
         )
     else:
-        SimpleLogger().logError(
+        SimpleLogger.logError(
             f"{SimplerLogger.calledFrom(fnName)}"
             f"{SimpleLogger.logStr("Request failed with status code")}"
             f"{response.status_code}"
