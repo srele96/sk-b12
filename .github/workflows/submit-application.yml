@@ -36,4 +36,4 @@ jobs:
       image: ghcr.io/srele96/sk-b12-env:latest
     steps:
       - name: Run script
-        run: uv run main.py
+        run: uv sync && uv run main.py
