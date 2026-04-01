@@ -35,6 +35,14 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
 
+      - name: Cache uv
+        uses: actions/cache@v5
+        with:
+          path: /root/.cache/uv
+          key: ${{ runner.os }}-uv-${{ hashFiles('**/uv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-uv-
+
       - name: Run Sumission Script
         env:
           DATA_URL: ${{ github.event.inputs.url }}
