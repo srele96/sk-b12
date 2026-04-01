@@ -9,6 +9,8 @@ Send a CV via pipeline.
 - The custom image acts as an empty shell with prepared tools required to build the project
 - The automated script to build and publish a docker image to github
 
+_Note: Here i did a similar thing a while ago <https://github.com/srele96/sk-experiments/tree/develop/docker/experiments/play_with_docker>._
+
 ## Test server
 
 Use the echo server for testing purposes:
