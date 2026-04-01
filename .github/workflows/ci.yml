@@ -1,1 +1,39 @@
-# TODO: Implement
+name: Submit Application
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "The application submission URL"
+        required: true
+      name:
+        description: "First name"
+        required: true
+      email:
+        description: "Your email"
+        required: true
+      resume_link:
+        description: "Your resume link"
+        required: true
+      repository_link:
+        description: "Your repository link"
+        required: true
+      action_run_link:
+        description: "The link to the page that runs github action"
+        required: true
+      sha_hmac_secret:
+        description: "The content signing secret"
+        required: true
+      submit_application:
+        description: "A flag to manually control whether pipeline submits the application or not"
+        required: true
+        default: false
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/srele96/sk-b12-env:latest
+    steps:
+      - name: Run script
+        run: uv help

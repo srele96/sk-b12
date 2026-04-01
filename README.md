@@ -2,6 +2,13 @@
 
 Send a CV via pipeline.
 
+## High level explanation
+
+- The script sends an application
+- The workflow uses custom image to clone the repo and run the script. The workflow variables encapsulate secrets and inject them into the ENVIRONMENT.
+- The custom image acts as an empty shell with prepared tools required to build the project
+- The automated script to build and publish a docker image to github
+
 ## Test server
 
 Use the echo server for testing purposes:

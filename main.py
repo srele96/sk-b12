@@ -6,6 +6,9 @@ import hmac
 import json
 import hashlib
 
+# =============================================================================
+# ENVIRONMENT VARIABLES =======================================================
+
 load_dotenv()
 
 KEY_DATA_URL = "DATA_URL"
@@ -21,6 +24,8 @@ KEY_DATA_SHA_HMAC_SECRET = 'DATA_SHA_HMAC_SECRET'
 # https://stackoverflow.com/questions/76464269/how-to-rerun-a-github-action-workflow-from-the-command-line-and-have-the-status/76465815#76465815
 KEY_GITHUB_RUN_ID = 'GITHUB_RUN_ID'
 
+KEY_SUBMIT_APPLICATION = 'SUBMIT_APPLICATION'
+
 VARS = [
     KEY_DATA_URL,
     KEY_DATA_NAME,
@@ -29,7 +34,8 @@ VARS = [
     KEY_DATA_REPOSITORY_LINK,
     KEY_DATA_ACTION_RUN_LINK,
     KEY_GITHUB_RUN_ID,
-    KEY_DATA_SHA_HMAC_SECRET
+    KEY_DATA_SHA_HMAC_SECRET,
+    KEY_SUBMIT_APPLICATION
 ]
 
 
@@ -57,6 +63,28 @@ DATA_REPOSITORY_LINK = os.getenv(KEY_DATA_REPOSITORY_LINK)
 
 GITHUB_RUN_ID = os.getenv(KEY_GITHUB_RUN_ID)
 
+
+def strToBool(value: str):
+    stripped = value.lower().strip()
+    _true = "true"
+    _false = "false"
+    if stripped == _true:
+        return True
+    if stripped == _false:
+        return False
+    raise ValueError(f"Received invalid value. Expected {_true}"
+                     f"or {_false}, received: {stripped}")
+
+
+# The issue with dotenv is that every value is treated as a string
+SUBMIT_APPLICATION = strToBool(os.getenv(KEY_SUBMIT_APPLICATION))
+
+# ENVIRONMENT VARIABLES =======================================================
+# =============================================================================
+
+
+# =============================================================================
+# IMPLEMENTATION ==============================================================
 
 def getConsistentData(data):
     # Ensure consistent SHA digest
@@ -130,10 +158,15 @@ def submitApplication():
     else:
         print("Error", response.status_code)
 
+# IMPLEMENTATION ==============================================================
+# =============================================================================
+
 
 def main():
     assertExpectedDigest()
-    submitApplication()
+
+    if SUBMIT_APPLICATION:
+        submitApplication()
 
 
 if __name__ == "__main__":
